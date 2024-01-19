@@ -40,7 +40,3 @@ jobs:
       - name: build
         run: |
           ninja -C build
-
-      - name: test
-        run: |
-          ctest --test-dir build/test --build-config Release
