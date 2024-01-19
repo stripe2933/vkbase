@@ -20,7 +20,11 @@ find_package(Vulkan REQUIRED)
 add_library(vkbase)
 target_sources(vkbase PUBLIC
     FILE_SET CXX_MODULES
-    FILES vkbase.cppm vkbase.primitives.cppm vkbase.builders.cppm
+    BASE_DIRS ${PROJECT_SOURCE_DIR}/src
+    FILES
+        ${PROJECT_SOURCE_DIR}/src/vkbase.cppm
+        ${PROJECT_SOURCE_DIR}/src/vkbase.primitives.cppm
+        ${PROJECT_SOURCE_DIR}/src/vkbase.builders.cppm
 
     FILE_SET CXX_MODULES
     BASE_DIRS ${Vulkan_INCLUDE_DIR}
