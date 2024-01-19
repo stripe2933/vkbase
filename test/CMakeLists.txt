@@ -14,12 +14,15 @@ endif()
 # Project executables.
 # --------------------
 
-add_executable(vkbase_test main.cpp)
-target_link_libraries(vkbase_test PRIVATE vkbase)
+add_executable(vkbase_app_build_test app_build_test.cpp)
+target_link_libraries(vkbase_app_build_test PRIVATE vkbase)
+
+add_executable(vkbase_app_with_swapchain_build_test_headless app_with_swapchain_build_test_headless.cpp)
+target_link_libraries(vkbase_app_with_swapchain_build_test_headless PRIVATE vkbase)
 
 if (ENABLE_GLFW_INTEGRATION_TEST)
-    target_compile_definitions(vkbase_test PRIVATE VKBASE_ENABLE_GLFW_INTEGRATION_TEST)
-    target_link_libraries(vkbase_test PRIVATE glfw)
+    add_executable(vkbase_app_with_swapchain_build_test_glfw app_with_swapchain_build_test_glfw.cpp)
+    target_link_libraries(vkbase_app_with_swapchain_build_test_glfw PRIVATE vkbase glfw)
 endif()
 
 # --------------------
@@ -27,4 +30,6 @@ endif()
 # --------------------
 
 enable_testing()
-add_test(vkbase_test vkbase_test)
+add_test(vkbase_app_build_test vkbase_app_build_test)
+add_test(vkbase_app_with_swapchain_build_test_headless vkbase_app_with_swapchain_build_test_headless)
+add_test(vkbase_app_with_swapchain_build_test_glfw vkbase_app_with_swapchain_build_test_glfw)
