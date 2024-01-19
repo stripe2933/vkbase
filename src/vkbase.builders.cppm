@@ -142,7 +142,7 @@ namespace vkbase {
 
         constexpr float queuePriority = 1.f;
         std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
-        std::ranges::transform(queueFamilyIndices.getUniqueIndices(), back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
+        std::ranges::transform(queueFamilyIndices.getUniqueIndices(), std::back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
             return vk::DeviceQueueCreateInfo {
                 {},
                 queueFamilyIndex,
@@ -229,7 +229,7 @@ namespace vkbase {
         constexpr float queuePriority = 1.f;
         std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
         queueCreateInfos.reserve(uniqueQueueFamilyIndices.size());
-        std::ranges::transform(uniqueQueueFamilyIndices, back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
+        std::ranges::transform(uniqueQueueFamilyIndices, std::back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
             return vk::DeviceQueueCreateInfo {
                 {},
                 queueFamilyIndex,
@@ -277,7 +277,7 @@ namespace vkbase {
 
         std::vector<std::pair<vk::Image, vk::raii::ImageView>> swapchainImageAndViews;
         swapchainImageAndViews.reserve(imageCount);
-        std::ranges::transform(swapchain.getImages(), back_inserter(swapchainImageAndViews), [this, &device](vk::Image image) {
+        std::ranges::transform(swapchain.getImages(), std::back_inserter(swapchainImageAndViews), [this, &device](vk::Image image) {
             const vk::ImageViewCreateInfo createInfo {
                 {},
                 image,

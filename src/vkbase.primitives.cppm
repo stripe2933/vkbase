@@ -124,7 +124,7 @@ namespace vkbase {
 
         swapchainImageAndViews.clear();
         swapchainImageAndViews.reserve(imageCount);
-        std::ranges::transform(swapchain.getImages(), back_inserter(swapchainImageAndViews), [this](vk::Image image) {
+        std::ranges::transform(swapchain.getImages(), std::back_inserter(swapchainImageAndViews), [this](vk::Image image) {
             const vk::ImageViewCreateInfo createInfo {
                 {},
                 image,
