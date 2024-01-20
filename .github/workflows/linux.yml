@@ -17,8 +17,8 @@ jobs:
 
       - name: Get Ninja via APT
         run: |
-          sudo apt-get update
-          sudo apt-get install ninja-build
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build
 
       - name: Prepare Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.0
@@ -37,4 +37,4 @@ jobs:
 
       - name: build
         run: |
-          cmake --build build --config Release -j4
+          ninja -C build
