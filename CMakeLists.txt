@@ -16,7 +16,7 @@ if (CMAKE_CXX_STANDARD LESS 20)
     message(FATAL_ERROR "vkbase requires C++20 or newer.")
 endif()
 
-option(VKBASE_BUILD_TESTS "Build vkbase tests." OFF)
+option(VKBASE_BUILD_TESTS "Build vkbase tests.")
 
 # --------------------
 # External dependencies.

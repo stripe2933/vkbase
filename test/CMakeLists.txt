@@ -1,6 +1,6 @@
 include(CTest)
 
-option(ENABLE_GLFW_INTEGRATION_TEST "Test Vulkan instance creation with GLFW surface." OFF)
+option(ENABLE_GLFW_INTEGRATION_TEST "Test Vulkan instance creation with GLFW surface.")
 
 # --------------------
 # External dependencies.
