@@ -1,6 +1,5 @@
 #include <vector>
 
-import vulkan_hpp;
 import vkbase;
 // A trick for import GLFW Vulkan bindings without load huge vulkan headers.
 // Note that this includes must be after vulkan_hpp.

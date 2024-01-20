@@ -42,12 +42,6 @@ if (NOT TARGET VulkanHppModule)
         FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
     )
     target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
-    target_compile_definitions(VulkanHppModule PUBLIC
-        VULKAN_HPP_NO_SETTERS
-        VULKAN_HPP_NO_SMART_HANDLE
-        VULKAN_HPP_NO_TO_STRING
-        VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
-    )
 endif()
 
 # --------------------

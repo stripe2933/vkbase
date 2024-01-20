@@ -1,4 +1,3 @@
-import vulkan_hpp;
 import vkbase;
 
 int main() {
