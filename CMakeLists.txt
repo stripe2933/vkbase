@@ -25,6 +25,31 @@ option(VKBASE_BUILD_TESTS "Build vkbase tests.")
 find_package(Vulkan REQUIRED)
 
 # --------------------
+# Setup modules for external dependencies.
+# --------------------
+
+if (NOT TARGET VulkanHppModule)
+    # Require Vulkan version ≥ 1.3.256 (earliest version when the Vulkan module was available)
+    if (${Vulkan_VERSION} VERSION_LESS "1.3.256")
+        message(FATAL_ERROR "Minimum required Vulkan version for C++ modules is 1.3.256. Found ${Vulkan_VERSION}.")
+    endif()
+
+    # Setup Vulkan C++ module as a library
+    add_library(VulkanHppModule)
+    target_sources(VulkanHppModule PUBLIC
+        FILE_SET CXX_MODULES
+        BASE_DIRS ${Vulkan_INCLUDE_DIR}
+        FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
+    )
+    target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
+    target_compile_definitions(VulkanHppModule PUBLIC
+        VULKAN_HPP_NO_SETTERS
+        VULKAN_HPP_NO_SMART_HANDLE
+        VULKAN_HPP_NO_TO_STRING
+    )
+endif()
+
+# --------------------
 # Project libraries.
 # --------------------
 
@@ -36,17 +61,8 @@ target_sources(vkbase PUBLIC
         ${PROJECT_SOURCE_DIR}/src/vkbase.cppm
         ${PROJECT_SOURCE_DIR}/src/vkbase.primitives.cppm
         ${PROJECT_SOURCE_DIR}/src/vkbase.builders.cppm
-
-    FILE_SET CXX_MODULES
-    BASE_DIRS ${Vulkan_INCLUDE_DIR}
-    FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
 )
-target_link_libraries(vkbase PUBLIC Vulkan::Vulkan)
-target_compile_definitions(vkbase PUBLIC
-    VULKAN_HPP_NO_SETTERS
-    VULKAN_HPP_NO_SMART_HANDLE
-    VULKAN_HPP_NO_TO_STRING
-)
+target_link_libraries(vkbase PUBLIC VulkanHppModule)
 
 # --------------------
 # Tests.
