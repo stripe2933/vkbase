@@ -18,16 +18,16 @@ export namespace vkbase {
     struct DefaultQueueFamilyIndices {
         std::uint32_t graphics, compute;
 
-        [[nodiscard]] std::vector<std::uint32_t> getUniqueIndices() const noexcept;
+        explicit DefaultQueueFamilyIndices(vk::PhysicalDevice physicalDevice);
 
-        [[nodiscard]] static DefaultQueueFamilyIndices from(vk::PhysicalDevice physicalDevice);
+        [[nodiscard]] std::vector<std::uint32_t> getUniqueIndices() const noexcept;
     };
 
     struct DefaultQueues {
         vk::Queue graphics;
         vk::Queue compute;
 
-        [[nodiscard]] static DefaultQueues from(vk::Device device, DefaultQueueFamilyIndices queueFamilyIndices);
+        DefaultQueues(vk::Device device, DefaultQueueFamilyIndices queueFamilyIndices);
     };
 
     template <typename QueueFamilyIndices, typename Queues>
@@ -69,7 +69,7 @@ namespace vkbase {
         return { graphics, compute };
     }
 
-    DefaultQueueFamilyIndices DefaultQueueFamilyIndices::from(vk::PhysicalDevice physicalDevice) {
+    DefaultQueueFamilyIndices::DefaultQueueFamilyIndices(vk::PhysicalDevice physicalDevice) {
         std::optional<std::uint32_t> graphics, compute;
         for (std::uint32_t index = 0; vk::QueueFamilyProperties property : physicalDevice.getQueueFamilyProperties()) {
             if (property.queueFlags & vk::QueueFlagBits::eGraphics) {
@@ -80,7 +80,9 @@ namespace vkbase {
             }
 
             if (graphics && compute) {
-                return { *graphics, *compute };
+                this->graphics = *graphics;
+                this->compute = *compute;
+                return;
             }
 
             ++index;
@@ -89,11 +91,10 @@ namespace vkbase {
         throw std::runtime_error { "Failed to get required queue family indices from physical device" };
     }
 
-    DefaultQueues DefaultQueues::from(vk::Device device, DefaultQueueFamilyIndices queueFamilyIndices) {
-        return {
-            device.getQueue(queueFamilyIndices.graphics, 0),
-            device.getQueue(queueFamilyIndices.compute, 0)
-        };
+    DefaultQueues::DefaultQueues(vk::Device device, DefaultQueueFamilyIndices queueFamilyIndices)
+        : graphics { device.getQueue(queueFamilyIndices.graphics, 0) },
+          compute { device.getQueue(queueFamilyIndices.compute, 0) } {
+
     }
 
     template <typename QueueFamilyIndices, typename Queues>

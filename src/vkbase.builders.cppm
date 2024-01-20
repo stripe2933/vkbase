@@ -27,9 +27,17 @@ export namespace vkbase {
         std::vector<const char*> instanceLayers{};
         std::vector<const char*> instanceExtensions{};
         std::function<std::uint32_t(vk::PhysicalDevice)> physicalDeviceRater = DefaultPhysicalDeviceRater{};
+        std::function<QueueFamilyIndices(vk::PhysicalDevice)> queueFamilyIndexGetter
+            = [](vk::PhysicalDevice physicalDevice) { return QueueFamilyIndices { physicalDevice }; };
         vk::PhysicalDeviceFeatures physicalDeviceFeatures{};
+        std::function<std::vector<std::uint32_t>(const QueueFamilyIndices&)> uniqueQueueFamilyIndexGetter
+            = [](const QueueFamilyIndices &queueFamilyIndices) { return queueFamilyIndices.getUniqueIndices(); };
         std::vector<const char*> deviceExtensions{};
         std::tuple<DevicePNexts...> devicePNexts{};
+        std::function<Queues(const QueueFamilyIndices&, vk::Device)> queueGetter
+            = [](const QueueFamilyIndices &queueFamilyIndices, vk::Device device) {
+                return Queues { device, queueFamilyIndices };
+            };
 
         AppBuilder &enableValidationLayers();
         AppBuilder &enablePotability();
@@ -81,7 +89,7 @@ namespace vkbase {
         vk::PhysicalDevice physicalDevice) const {
         // Check if given device supports the required queue families.
         try {
-            const QueueFamilyIndices queueFamilyIndices = QueueFamilyIndices::from(physicalDevice); (void)queueFamilyIndices;
+            const QueueFamilyIndices queueFamilyIndices { physicalDevice }; (void)queueFamilyIndices;
         }
         catch (const std::runtime_error&) {
             return 0;
@@ -141,11 +149,11 @@ namespace vkbase {
             return *it;
         }();
 
-        const QueueFamilyIndices queueFamilyIndices = QueueFamilyIndices::from(*physicalDevice);
+        const QueueFamilyIndices queueFamilyIndices = queueFamilyIndexGetter(*physicalDevice);
 
         constexpr float queuePriority = 1.f;
         std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
-        std::ranges::transform(queueFamilyIndices.getUniqueIndices(), std::back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
+        std::ranges::transform(uniqueQueueFamilyIndexGetter(queueFamilyIndices), std::back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
             return vk::DeviceQueueCreateInfo {
                 {},
                 queueFamilyIndex,
@@ -165,7 +173,7 @@ namespace vkbase {
         };
         vk::raii::Device device { physicalDevice, deviceCreateInfoChain.get() };
 
-        const Queues queues = Queues::from(*device, queueFamilyIndices);
+        const Queues queues = queueGetter(queueFamilyIndices, *device);
 
         return {
             std::move(context),
@@ -207,9 +215,9 @@ namespace vkbase {
 
         // Find queue family indices.
         // 1. Requested by AppBuilder.
-        const QueueFamilyIndices queueFamilyIndices = QueueFamilyIndices::from(*physicalDevice);
+        const QueueFamilyIndices queueFamilyIndices = appBuilder.queueFamilyIndexGetter(*physicalDevice);
         // 2. Present queue family index.
-        const std::uint32_t presentQueueFamilyIndex = [&]() {
+        const std::uint32_t presentQueueFamilyIndex = [&] {
             const std::size_t queueFamiliesCount = physicalDevice.getQueueFamilyProperties().size();
             for (std::uint32_t index = 0; index < queueFamiliesCount; ++index) {
                 if (physicalDevice.getSurfaceSupportKHR(index, *surface)) {
@@ -221,8 +229,8 @@ namespace vkbase {
         }();
 
         // If presentQueueFamilyIndex not exist in queueFamilyIndices, add it.
-        const std::vector uniqueQueueFamilyIndices = [&]() {
-            std::vector indices = queueFamilyIndices.getUniqueIndices();
+        const std::vector uniqueQueueFamilyIndices = [&] {
+            std::vector indices = appBuilder.uniqueQueueFamilyIndexGetter(queueFamilyIndices);
             if (std::ranges::find(indices, presentQueueFamilyIndex) == indices.end()) {
                 indices.push_back(presentQueueFamilyIndex);
             }
@@ -251,10 +259,10 @@ namespace vkbase {
             },
             get<DevicePNexts>(appBuilder.devicePNexts)...
         };
-        vk::raii::Device device { physicalDevice, deviceCreateInfoChain.template get<vk::DeviceCreateInfo>() };
+        vk::raii::Device device { physicalDevice, deviceCreateInfoChain.get() };
 
         // Get queues from device.
-        const Queues queues = Queues::from(*device, queueFamilyIndices);
+        const Queues queues = appBuilder.queueGetter(queueFamilyIndices, *device);
         const vk::Queue presentQueue = (*device).getQueue(presentQueueFamilyIndex, 0);
 
         // Create swapchain.
