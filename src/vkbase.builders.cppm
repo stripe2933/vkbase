@@ -6,6 +6,8 @@ module;
 
 #include <algorithm>
 #include <functional>
+#include <iterator>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 

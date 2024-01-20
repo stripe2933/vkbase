@@ -4,7 +4,10 @@
 
 module;
 
+#include <algorithm>
+#include <iterator>
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 export module vkbase:primitives;
