@@ -30,7 +30,7 @@ export namespace vkbase {
         DefaultQueues(vk::Device device, DefaultQueueFamilyIndices queueFamilyIndices);
     };
 
-    template <typename QueueFamilyIndices, typename Queues>
+    template <typename QueueFamilyIndices = DefaultQueueFamilyIndices, typename Queues = DefaultQueues>
     struct App{
         vk::raii::Context context;
         vk::raii::Instance instance;
@@ -40,7 +40,7 @@ export namespace vkbase {
         Queues queues;
     };
 
-    template <typename QueueFamilyIndices, typename Queues>
+    template <typename QueueFamilyIndices = DefaultQueueFamilyIndices, typename Queues = DefaultQueues>
     struct AppWithSwapchain : App<QueueFamilyIndices, Queues>{
         vk::raii::SurfaceKHR surface;
         std::uint32_t presentQueueFamilyIndex;
