@@ -64,9 +64,9 @@ export namespace vkbase {
 // --------------------
 
 #define FWD(...) std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
-#define APP_BUILDER_TEMPLATE_ABRV template <typename QueueFamilyIndices, typename Queues, typename... DevicePNexts>
-#define APP_BUILDER_ABRV AppBuilder<QueueFamilyIndices, Queues, DevicePNexts...>
-#define APP_WITH_SWAPCHAIN_BUILDER_ABRV AppWithSwapchainBuilder<QueueFamilyIndices, Queues, DevicePNexts...>
+#define APP_BUILDER_TEMPLATE_ABBRV template <typename QueueFamilyIndices, typename Queues, typename... DevicePNexts>
+#define APP_BUILDER_ABBRV AppBuilder<QueueFamilyIndices, Queues, DevicePNexts...>
+#define APP_WITH_SWAPCHAIN_BUILDER_ABBRV AppWithSwapchainBuilder<QueueFamilyIndices, Queues, DevicePNexts...>
 
 template <typename T, typename V, typename P = std::identity>
 void present(std::vector<T> &container, V &&value, P &&proj = {}) {
@@ -84,8 +84,8 @@ struct SVConstructor {
 inline constexpr SVConstructor svConstructor{};
 
 namespace vkbase {
-    APP_BUILDER_TEMPLATE_ABRV
-    std::uint32_t APP_BUILDER_ABRV::DefaultPhysicalDeviceRater::operator()(
+    APP_BUILDER_TEMPLATE_ABBRV
+    std::uint32_t APP_BUILDER_ABBRV::DefaultPhysicalDeviceRater::operator()(
         vk::PhysicalDevice physicalDevice) const {
         // Check if given device supports the required queue families.
         try {
@@ -107,14 +107,14 @@ namespace vkbase {
         return score;
     }
 
-    APP_BUILDER_TEMPLATE_ABRV
-    APP_BUILDER_ABRV & APP_BUILDER_ABRV::enableValidationLayers() {
+    APP_BUILDER_TEMPLATE_ABBRV
+    APP_BUILDER_ABBRV & APP_BUILDER_ABBRV::enableValidationLayers() {
         present(instanceLayers, "VK_LAYER_KHRONOS_validation", svConstructor);
         return *this;
     }
 
-    APP_BUILDER_TEMPLATE_ABRV
-    APP_BUILDER_ABRV & APP_BUILDER_ABRV::enablePotability() {
+    APP_BUILDER_TEMPLATE_ABBRV
+    APP_BUILDER_ABBRV & APP_BUILDER_ABBRV::enablePotability() {
         instanceCreateFlags |= vk::InstanceCreateFlagBits::eEnumeratePortabilityKHR;
         present(instanceExtensions, "VK_KHR_portability_enumeration", svConstructor);
         present(instanceExtensions, "VK_KHR_get_physical_device_properties2", svConstructor);
@@ -122,8 +122,8 @@ namespace vkbase {
         return *this;
     }
 
-    APP_BUILDER_TEMPLATE_ABRV
-    App<QueueFamilyIndices, Queues> APP_BUILDER_ABRV::build(const vk::ApplicationInfo &appInfo) {
+    APP_BUILDER_TEMPLATE_ABBRV
+    App<QueueFamilyIndices, Queues> APP_BUILDER_ABBRV::build(const vk::ApplicationInfo &appInfo) {
         vk::raii::Context context{};
 
         const vk::InstanceCreateInfo instanceCreateInfo {
@@ -185,8 +185,8 @@ namespace vkbase {
         };
     }
 
-    APP_BUILDER_TEMPLATE_ABRV
-    AppWithSwapchain<QueueFamilyIndices, Queues> APP_WITH_SWAPCHAIN_BUILDER_ABRV::build(
+    APP_BUILDER_TEMPLATE_ABBRV
+    AppWithSwapchain<QueueFamilyIndices, Queues> APP_WITH_SWAPCHAIN_BUILDER_ABBRV::build(
         const vk::ApplicationInfo &appInfo,
         std::function<vk::SurfaceKHR(vk::Instance)> surfaceFunc,
         vk::Extent2D extent) {

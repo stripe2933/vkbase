@@ -48,14 +48,16 @@ endif()
 # Project libraries.
 # --------------------
 
-add_library(vkbase)
+add_library(vkbase
+    impl/primitives.cpp
+)
 target_sources(vkbase PUBLIC
     FILE_SET CXX_MODULES
-    BASE_DIRS ${PROJECT_SOURCE_DIR}/src
+    BASE_DIRS ${PROJECT_SOURCE_DIR}/interface
     FILES
-        ${PROJECT_SOURCE_DIR}/src/vkbase.cppm
-        ${PROJECT_SOURCE_DIR}/src/vkbase.primitives.cppm
-        ${PROJECT_SOURCE_DIR}/src/vkbase.builders.cppm
+        ${PROJECT_SOURCE_DIR}/interface/vkbase.cppm
+        ${PROJECT_SOURCE_DIR}/interface/primitives.cppm
+        ${PROJECT_SOURCE_DIR}/interface/builders.cppm
 )
 target_link_libraries(vkbase PUBLIC VulkanHppModule)
 
