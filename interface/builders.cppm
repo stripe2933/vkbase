@@ -50,6 +50,7 @@ export namespace vkbase {
         AppBuilder<QueueFamilyIndices, Queues, DevicePNexts...> appBuilder{};
         vk::Format swapchainFormat = vk::Format::eB8G8R8A8Srgb;
         vk::ColorSpaceKHR swapchainColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear;
+        vk::ImageUsageFlags swapchainUsage = vk::ImageUsageFlagBits::eColorAttachment;
         vk::PresentModeKHR swapchainPresentMode = vk::PresentModeKHR::eFifo;
 
         [[nodiscard]] AppWithSwapchain<QueueFamilyIndices, Queues> build(
@@ -277,7 +278,7 @@ namespace vkbase {
             swapchainColorSpace,
             extent,
             1,
-            vk::ImageUsageFlagBits::eColorAttachment,
+            swapchainUsage,
             vk::SharingMode::eExclusive,
             {},
             capabilities.currentTransform,
