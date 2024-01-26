@@ -88,6 +88,11 @@ namespace vkbase {
         };
         swapchain = { { App<QueueFamilyIndices, Queues>::device, createInfo }, format, colorSpace, extent };
 
+        swapchainFormat = format;
+        swapchainColorSpace = colorSpace;
+        swapchainExtent = extent;
+        swapchainPresentMode = presentMode;
+
         swapchainImageAndViews.clear();
         swapchainImageAndViews.reserve(imageCount);
         std::ranges::transform(swapchain.getImages(), std::back_inserter(swapchainImageAndViews), [this](vk::Image image) {
