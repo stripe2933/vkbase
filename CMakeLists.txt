@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.26 FATAL_ERROR)
-project(vkbase)
+project(vkbase
+    VERSION 0.1.0
+    LANGUAGES CXX
+    DESCRIPTION "Vulkan bootstrap with Vulkan-Hpp RAII objects, including swapchain creation support."
+    HOMEPAGE_URL "https://github.com/stripe2933/vkbase"
+)
 
 if(CMAKE_VERSION VERSION_LESS "3.28.0")
     if(CMAKE_VERSION VERSION_LESS "3.27.0")
