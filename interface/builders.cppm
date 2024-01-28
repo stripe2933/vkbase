@@ -72,7 +72,7 @@ export namespace vkbase {
 
 template <typename T, typename V, typename P = std::identity>
 void present(std::vector<T> &container, V &&value, P &&proj = {}) {
-    if (std::ranges::find(container, value, FWD(proj)) == container.end()) {
+    if (std::ranges::find(container, proj(value), proj) == container.end()) {
         container.emplace_back(FWD(value));
     }
 }
