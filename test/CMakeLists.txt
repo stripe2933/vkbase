@@ -1,12 +1,12 @@
 include(CTest)
 
-option(ENABLE_GLFW_INTEGRATION_TEST "Test Vulkan instance creation with GLFW surface.")
+option(VKBASE_ENABLE_GLFW_INTEGRATION_TEST "Test Vulkan instance creation with GLFW surface.")
 
 # --------------------
 # External dependencies.
 # --------------------
 
-if (ENABLE_GLFW_INTEGRATION_TEST)
+if (VKBASE_ENABLE_GLFW_INTEGRATION_TEST)
     find_package(GLFW3 CONFIG REQUIRED)
 endif()
 
@@ -20,7 +20,7 @@ target_link_libraries(vkbase_app_build_test PRIVATE vkbase)
 add_executable(vkbase_app_with_swapchain_build_test_headless app_with_swapchain_build_test_headless.cpp)
 target_link_libraries(vkbase_app_with_swapchain_build_test_headless PRIVATE vkbase)
 
-if (ENABLE_GLFW_INTEGRATION_TEST)
+if (VKBASE_ENABLE_GLFW_INTEGRATION_TEST)
     add_executable(vkbase_app_with_swapchain_build_test_glfw app_with_swapchain_build_test_glfw.cpp)
     target_link_libraries(vkbase_app_with_swapchain_build_test_glfw PRIVATE vkbase glfw)
 endif()
@@ -38,7 +38,7 @@ target_link_libraries(vkbase_app_build_test_custom_queue PRIVATE vkbase)
 enable_testing()
 add_test(vkbase_app_build_test vkbase_app_build_test)
 add_test(vkbase_app_with_swapchain_build_test_headless vkbase_app_with_swapchain_build_test_headless)
-if (ENABLE_GLFW_INTEGRATION_TEST)
+if (VKBASE_ENABLE_GLFW_INTEGRATION_TEST)
     add_test(vkbase_app_with_swapchain_build_test_glfw vkbase_app_with_swapchain_build_test_glfw)
 endif()
 add_test(vkbase_app_build_test_dynamic_rendering vkbase_app_build_test_dynamic_rendering)
