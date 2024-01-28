@@ -8,9 +8,3 @@ if (CMAKE_VERSION VERSION_LESS "3.28.0")
 else()
     cmake_policy(VERSION 3.28)
 endif()
-
-# TODO: For now, Clang 16 can't handle C++20 module with CMAKE_CXX_EXTENSIONS ON. When it fixed, remove below lines.
-# See https://www.kitware.com/import-cmake-the-experiment-is-over/.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "17")
-    set(CMAKE_CXX_EXTENSIONS OFF)
-endif()
