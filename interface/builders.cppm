@@ -314,10 +314,7 @@ namespace vkbase {
             presentQueueFamilyIndex,
             presentQueue,
             std::move(swapchain),
-            swapchainFormat,
-            swapchainColorSpace,
-            extent,
-            swapchainPresentMode,
+            createInfo,
             std::move(swapchainImageAndViews),
         };
     }

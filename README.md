@@ -147,10 +147,7 @@ int main() {
     // appWithSwapchain.presentQueueFamilyIndex: std::uint32_t
     // appWithSwapchain.presentQueue:            vk::Queue
     // appWithSwapchain.swapchain:               vk::raii::SwapchainKHR
-    // appWithSwapchain.swapchainFormat:         vk::Format
-    // appWithSwapchain.swapchainColorSpace:     vk::ColorSpaceKHR
-    // appWithSwapchain.swapchainExtent:         vk::Extent2D
-    // appWithSwapchain.swapchainPresentMode:    vk::PresentModeKHR
+    // appWithSwapchain.swapchainInfo:           vk::SwapchainCreateInfoKHR
     // appWithSwapchain.swapchainImageAndViews:  std::vector<std::pair<vk::Image, vk::raii::ImageView>>
 
     glfwDestroyWindow(window);

@@ -44,10 +44,7 @@ export namespace vkbase {
         std::uint32_t presentQueueFamilyIndex;
         vk::Queue presentQueue;
         vk::raii::SwapchainKHR swapchain;
-        vk::Format swapchainFormat;
-        vk::ColorSpaceKHR swapchainColorSpace;
-        vk::Extent2D swapchainExtent;
-        vk::PresentModeKHR swapchainPresentMode;
+        vk::SwapchainCreateInfoKHR swapchainInfo;
         std::vector<std::pair<vk::Image, vk::raii::ImageView>> swapchainImageAndViews;
 
         void recreateSwapchain(vk::Format format, vk::ColorSpaceKHR colorSpace, vk::PresentModeKHR presentMode, vk::Extent2D extent);
@@ -60,51 +57,18 @@ export namespace vkbase {
 
 namespace vkbase {
     template <typename QueueFamilyIndices, typename Queues>
-    void AppWithSwapchain<QueueFamilyIndices, Queues>::recreateSwapchain(
-        vk::Format format,
-        vk::ColorSpaceKHR colorSpace,
-        vk::PresentModeKHR presentMode,
-        vk::Extent2D extent) {
-        const vk::SurfaceCapabilitiesKHR capabilities
-            = App<QueueFamilyIndices, Queues>::physicalDevice.getSurfaceCapabilitiesKHR(*surface);
-        const std::uint32_t imageCount = swapchainImageAndViews.size();
-
-        const vk::SwapchainCreateInfoKHR createInfo {
-            {},
-            *surface,
-            imageCount,
-            format,
-            colorSpace,
-            extent,
-            1,
-            vk::ImageUsageFlagBits::eColorAttachment,
-            vk::SharingMode::eExclusive,
-            {},
-            capabilities.currentTransform,
-            vk::CompositeAlphaFlagBitsKHR::eOpaque,
-            presentMode,
-            {},
-            *swapchain,
-        };
-        swapchain = { { App<QueueFamilyIndices, Queues>::device, createInfo }, format, colorSpace, extent };
-
-        swapchainFormat = format;
-        swapchainColorSpace = colorSpace;
-        swapchainExtent = extent;
-        swapchainPresentMode = presentMode;
-
-        swapchainImageAndViews.clear();
-        swapchainImageAndViews.reserve(imageCount);
-        std::ranges::transform(swapchain.getImages(), std::back_inserter(swapchainImageAndViews), [this](vk::Image image) {
-            const vk::ImageViewCreateInfo createInfo {
+    void AppWithSwapchain<QueueFamilyIndices, Queues>::recreateSwapchain(vk::Extent2D extent) {
+        swapchainInfo.imageExtent = extent;
+        swapchain = { App<QueueFamilyIndices, Queues>::device, swapchainInfo };
+        std::ranges::transform(swapchain.getImages(), swapchainImageAndViews.begin(), [this](vk::Image image) {
+            return std::pair { image, vk::raii::ImageView { App<QueueFamilyIndices, Queues>::device, {
                 {},
                 image,
                 vk::ImageViewType::e2D,
-                swapchainFormat,
+                swapchainInfo.imageFormat,
                 {},
                 { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
-            };
-            return std::pair { image, vk::raii::ImageView { App<QueueFamilyIndices, Queues>::device, createInfo } };
+            } } };
         });
     }
 
