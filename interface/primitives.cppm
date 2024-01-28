@@ -6,6 +6,7 @@ module;
 
 #include <algorithm>
 #include <iterator>
+#include <optional>
 #include <span>
 #include <stdexcept>
 #include <vector>
