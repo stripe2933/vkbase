@@ -10,10 +10,10 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: Get Ninja via APT
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y ninja-build
+      - name: Install Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.11.0
 
       - name: Prepare Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.0
