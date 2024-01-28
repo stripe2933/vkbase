@@ -35,7 +35,7 @@ int main() {
     // app.queueFamilyIndices.graphics:         std::uint32_t
     // app.queueFamilyIndices.present:          std::uint32_t
     // app.device:                              vk::raii::Device
-    // app.queues.graphics, app.queues.present: vk::Queue
+    // app.queues.graphics, app.queues.compute: vk::Queue
     
     // Everything is RAII, so you don't need to destroy them manually.
 }
@@ -83,16 +83,11 @@ About `CPMAddPackage` command, see [here](https://github.com/cpm-cmake/CPM.cmake
 ```c++
 #include <vector>
 
-import vkbase;
-// A trick for import GLFW Vulkan bindings without load huge vulkan headers.
-// Note that this includes must be after vulkan_hpp.
-#define VK_VERSION_1_0
-using VkInstance = vk::Instance::CType;
-using VkSurfaceKHR = vk::SurfaceKHR::CType;
-using VkPhysicalDevice = vk::PhysicalDevice::CType;
-using VkAllocationCallbacks = vk::AllocationCallbacks;
-using VkResult = vk::Result;
+// For now, GLFW's Vulkan feature only enabled when including Vulkan-related header.
+#include <vulkan/vulkan_core.h>
 #include <GLFW/glfw3.h>
+
+import vkbase;
 
 int main() {
     constexpr vk::ApplicationInfo appInfo {
@@ -124,9 +119,10 @@ int main() {
             .enableValidationLayers()
 #endif
             ,
-            .swapchainFormat = vk::Format::eB8G8R8A8Srgb,             // Can omit this field (default: eR8G8B8A8Srgb).
-            .swapchainColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear, // Can omit this field (default: eSrgbNonlinear).
-            .swapchainPresentMode = vk::PresentModeKHR::eFifo,        // Can omit this field (default: eFifo).
+            .swapchainFormat = vk::Format::eB8G8R8A8Srgb,               // Can omit this field (default: eR8G8B8A8Srgb).
+            .swapchainColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear,   // Can omit this field (default: eSrgbNonlinear).
+            .swapchainUsage = vk::ImageUsageFlagBits::eColorAttachment, // Can omit this field (default: eColorAttachment).
+            .swapchainPresentMode = vk::PresentModeKHR::eFifo,          // Can omit this field (default: eFifo).
         }
         .build(appInfo, [window](vk::Instance instance) {
             // The 2nd argument of AppWithSwapchainBuilder::build is a function to create surface.
@@ -137,9 +133,12 @@ int main() {
         }, [window] {
             // The 3rd argument of AppWithSwapchainBuilder::build is swapchain extent.
             // Invoke this lambda function to get framebuffer size of the created GLFW window.
-            int framebufferWidth, framebufferHeight;
-            glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
-            return vk::Extent2D { static_cast<std::uint32_t>(framebufferWidth), static_cast<std::uint32_t>(framebufferHeight) };
+            if (vk::SurfaceKHR surface; glfwCreateWindowSurface(instance, window, nullptr,
+                &reinterpret_cast<VkSurfaceKHR&>(surface)) == VK_SUCCESS) {
+                return surface;
+            }
+
+            throw std::runtime_error { "GLFW window surface creation failed" };
         }());
         
     // Now you can use:
