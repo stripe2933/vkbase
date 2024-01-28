@@ -62,22 +62,6 @@ export namespace vkbase {
 
 namespace vkbase {
     template <typename QueueFamilyIndices, typename Queues>
-    void AppWithSwapchain<QueueFamilyIndices, Queues>::recreateSwapchain(vk::Extent2D extent) {
-        swapchainInfo.imageExtent = extent;
-        swapchain = { App<QueueFamilyIndices, Queues>::device, swapchainInfo };
-        std::ranges::transform(swapchain.getImages(), swapchainImageAndViews.begin(), [this](vk::Image image) {
-            return std::pair { image, vk::raii::ImageView { App<QueueFamilyIndices, Queues>::device, {
-                {},
-                image,
-                vk::ImageViewType::e2D,
-                swapchainInfo.imageFormat,
-                {},
-                { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
-            } } };
-        });
-    }
-
-    template <typename QueueFamilyIndices, typename Queues>
     auto AppWithSwapchain<QueueFamilyIndices, Queues>::acquireSwapchainImageIndex(vk::Semaphore imageAvailableSema) const -> std::optional<std::uint32_t> {
         const auto [result, imageIndex] = (*App<QueueFamilyIndices, Queues>::device).acquireNextImageKHR(
             *swapchain, UINT64_MAX, imageAvailableSema);
@@ -98,5 +82,22 @@ namespace vkbase {
             case vk::Result::eErrorOutOfDateKHR: case vk::Result::eSuboptimalKHR: return false;
             default: throw std::runtime_error { "Presenting swapchain image failed" };
         }
+    }
+
+    template <typename QueueFamilyIndices, typename Queues>
+    void AppWithSwapchain<QueueFamilyIndices, Queues>::recreateSwapchain(vk::Extent2D extent) {
+        swapchainInfo.imageExtent = extent;
+        swapchainInfo.oldSwapchain = *swapchain;
+        swapchain = { App<QueueFamilyIndices, Queues>::device, swapchainInfo };
+        std::ranges::transform(swapchain.getImages(), swapchainImageAndViews.begin(), [this](vk::Image image) {
+            return std::pair { image, vk::raii::ImageView { App<QueueFamilyIndices, Queues>::device, {
+                {},
+                image,
+                vk::ImageViewType::e2D,
+                swapchainInfo.imageFormat,
+                {},
+                { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
+            } } };
+        });
     }
 }
