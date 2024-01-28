@@ -92,7 +92,7 @@ namespace vkbase {
 
     template <typename QueueFamilyIndices, typename Queues>
     auto AppWithSwapchain<QueueFamilyIndices, Queues>::presentSwapchainImage(std::uint32_t imageIndex, std::span<const vk::Semaphore> waitSemas) const -> bool{
-        switch (presentQueue.presentKHR({ waitSemas, swapchain, imageIndex })) {
+        switch (presentQueue.presentKHR({ waitSemas, *swapchain, imageIndex })) {
             case vk::Result::eSuccess: return true;
             case vk::Result::eErrorOutOfDateKHR: case vk::Result::eSuboptimalKHR: return false;
             default: throw std::runtime_error { "Presenting swapchain image failed" };
