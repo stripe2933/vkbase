@@ -25,7 +25,7 @@ jobs:
       - name: configure
         run: |
           mkdir build
-          cmake -S . -G "Ninja" -B build \
+          CXX=g++14 cmake -S . -G "Ninja" -B build \
             -DCMAKE_CXX_STANDARD=20 \
             -DCMAKE_BUILD_TYPE=Release \
             -DVKBASE_BUILD_TESTS=ON
