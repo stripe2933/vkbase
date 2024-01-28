@@ -47,6 +47,12 @@ if (NOT TARGET VulkanHppModule)
         FILES ${Vulkan_INCLUDE_DIR}/vulkan/vulkan.cppm
     )
     target_link_libraries(VulkanHppModule PUBLIC Vulkan::Vulkan)
+
+    # TODO: For now, MSVC can't handle Vulkan named module with smart handles. When it fixed, remove below lines.
+    # See https://github.com/KhronosGroup/Vulkan-Hpp/blob/main/README.md#c20-named-module.
+    if (MSVC)
+        target_compile_definitions(VulkanHppModule PUBLIC VULKAN_HPP_NO_SMART_HANDLE)
+    endif()
 endif()
 
 # --------------------
