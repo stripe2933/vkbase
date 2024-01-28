@@ -1,16 +1,9 @@
 #include <vector>
 
-import vkbase;
-// A trick for import GLFW Vulkan bindings without load huge vulkan headers.
-// Note that this includes must be after vulkan_hpp.
-// TODO: remove this when GLFW support Vulkan loading with module.
-#define VK_VERSION_1_0
-using VkInstance = vk::Instance::CType;
-using VkSurfaceKHR = vk::SurfaceKHR::CType;
-using VkPhysicalDevice = vk::PhysicalDevice::CType;
-using VkAllocationCallbacks = vk::AllocationCallbacks;
-using VkResult = vk::Result;
+#include <vulkan/vulkan_core.h>
 #include <GLFW/glfw3.h>
+
+import vkbase;
 
 int main() {
     constexpr vk::ApplicationInfo appInfo {
@@ -38,9 +31,12 @@ int main() {
             .enableValidationLayers()
         }
         .build(appInfo, [window](vk::Instance instance) {
-            vk::SurfaceKHR surface;
-            glfwCreateWindowSurface(instance, window, nullptr, &reinterpret_cast<VkSurfaceKHR&>(surface));
-            return surface;
+            if (vk::SurfaceKHR surface; glfwCreateWindowSurface(instance, window, nullptr,
+                &reinterpret_cast<VkSurfaceKHR&>(surface)) == VK_SUCCESS) {
+                return surface;
+            }
+
+            throw std::runtime_error { "GLFW window surface creation failed" };
         }, [window] {
             int framebufferWidth, framebufferHeight;
             glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
