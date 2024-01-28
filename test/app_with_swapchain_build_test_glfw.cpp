@@ -35,7 +35,6 @@ int main() {
                 &reinterpret_cast<VkSurfaceKHR&>(surface)) == VK_SUCCESS) {
                 return surface;
             }
-
             throw std::runtime_error { "GLFW window surface creation failed" };
         }, [window] {
             int framebufferWidth, framebufferHeight;

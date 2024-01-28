@@ -127,18 +127,17 @@ int main() {
         .build(appInfo, [window](vk::Instance instance) {
             // The 2nd argument of AppWithSwapchainBuilder::build is a function to create surface.
             // It accepts vk::Instance and should return vk::SurfaceKHR.
-            vk::SurfaceKHR surface;
-            glfwCreateWindowSurface(instance, window, nullptr, &reinterpret_cast<VkSurfaceKHR&>(surface));
-            return surface;
-        }, [window] {
-            // The 3rd argument of AppWithSwapchainBuilder::build is swapchain extent.
-            // Invoke this lambda function to get framebuffer size of the created GLFW window.
             if (vk::SurfaceKHR surface; glfwCreateWindowSurface(instance, window, nullptr,
                 &reinterpret_cast<VkSurfaceKHR&>(surface)) == VK_SUCCESS) {
                 return surface;
             }
-
             throw std::runtime_error { "GLFW window surface creation failed" };
+        }, [window] {
+            // The 3rd argument of AppWithSwapchainBuilder::build is swapchain extent.
+            // Invoke this lambda function to get framebuffer size of the created GLFW window.
+            int framebufferWidth, framebufferHeight;
+            glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+            return vk::Extent2D { static_cast<std::uint32_t>(framebufferWidth), static_cast<std::uint32_t>(framebufferHeight) };
         }());
         
     // Now you can use:
