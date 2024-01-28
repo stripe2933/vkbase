@@ -41,9 +41,7 @@ int main() {
                 vk::PhysicalDeviceDynamicRenderingFeatures { vk::True },
             },
         }
-#ifndef NDEBUG
         .enableValidationLayers()
-#endif
 #if __APPLE__
         .enablePotability()
 #endif

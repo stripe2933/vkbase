@@ -45,9 +45,7 @@ int main() {
 #if __APPLE__
         .enablePotability()
 #endif
-#ifndef NDEBUG
         .enableValidationLayers()
-#endif
         .build(appInfo);
     (void)app;
 }
