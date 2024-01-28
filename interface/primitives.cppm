@@ -6,6 +6,8 @@ module;
 
 #include <algorithm>
 #include <iterator>
+#include <span>
+#include <stdexcept>
 #include <vector>
 
 export module vkbase:primitives;
@@ -47,7 +49,9 @@ export namespace vkbase {
         vk::SwapchainCreateInfoKHR swapchainInfo;
         std::vector<std::pair<vk::Image, vk::raii::ImageView>> swapchainImageAndViews;
 
-        void recreateSwapchain(vk::Format format, vk::ColorSpaceKHR colorSpace, vk::PresentModeKHR presentMode, vk::Extent2D extent);
+        [[nodiscard]] auto acquireSwapchainImageIndex(vk::Semaphore imageAvailableSema) const -> std::optional<std::uint32_t>;
+        [[nodiscard]] auto presentSwapchainImage(std::uint32_t imageIndex, std::span<const vk::Semaphore> waitSemas = {}) const -> bool;
+        void recreateSwapchain(vk::Extent2D extent);
     };
 }
 
@@ -72,4 +76,26 @@ namespace vkbase {
         });
     }
 
+    template <typename QueueFamilyIndices, typename Queues>
+    auto AppWithSwapchain<QueueFamilyIndices, Queues>::acquireSwapchainImageIndex(vk::Semaphore imageAvailableSema) const -> std::optional<std::uint32_t> {
+        const auto [result, imageIndex] = (*App<QueueFamilyIndices, Queues>::device).acquireNextImageKHR(
+            *swapchain, UINT64_MAX, imageAvailableSema);
+        switch (result) {
+            case vk::Result::eSuccess: case vk::Result::eSuboptimalKHR:
+              return imageIndex;
+            case vk::Result::eErrorOutOfDateKHR:
+                return std::nullopt;
+            default:
+                throw std::runtime_error { "Acquiring swapchain image failed" };
+        }
+    }
+
+    template <typename QueueFamilyIndices, typename Queues>
+    auto AppWithSwapchain<QueueFamilyIndices, Queues>::presentSwapchainImage(std::uint32_t imageIndex, std::span<const vk::Semaphore> waitSemas) const -> bool{
+        switch (presentQueue.presentKHR({ waitSemas, swapchain, imageIndex })) {
+            case vk::Result::eSuccess: return true;
+            case vk::Result::eErrorOutOfDateKHR: case vk::Result::eSuboptimalKHR: return false;
+            default: throw std::runtime_error { "Presenting swapchain image failed" };
+        }
+    }
 }

@@ -238,10 +238,10 @@ namespace vkbase {
             return std::move(indices);
         }();
 
-        constexpr float queuePriority = 1.f;
         std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
         queueCreateInfos.reserve(uniqueQueueFamilyIndices.size());
         std::ranges::transform(uniqueQueueFamilyIndices, std::back_inserter(queueCreateInfos), [=](std::uint32_t queueFamilyIndex) {
+            constexpr float queuePriority = 1.f;
             return vk::DeviceQueueCreateInfo {
                 {},
                 queueFamilyIndex,
@@ -290,15 +290,14 @@ namespace vkbase {
         std::vector<std::pair<vk::Image, vk::raii::ImageView>> swapchainImageAndViews;
         swapchainImageAndViews.reserve(imageCount);
         std::ranges::transform(swapchain.getImages(), std::back_inserter(swapchainImageAndViews), [this, &device](vk::Image image) {
-            const vk::ImageViewCreateInfo createInfo {
+            return std::pair { image, vk::raii::ImageView { device, {
                 {},
                 image,
                 vk::ImageViewType::e2D,
                 swapchainFormat,
                 {},
                 { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
-            };
-            return std::pair { image, vk::raii::ImageView { device, createInfo } };
+            } } };
         });
 
         return {
