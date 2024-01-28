@@ -8,6 +8,7 @@ module;
 #include <functional>
 #include <iterator>
 #include <stdexcept>
+#include <string_view>
 #include <tuple>
 #include <vector>
 
