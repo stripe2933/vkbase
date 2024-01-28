@@ -48,7 +48,7 @@ You need CMake 3.26 or newer for module support, and module compatible compiler.
 | Compiler | Version                                              |
 | --- |------------------------------------------------------|
 | MSVC | MSVC 14.34 toolset (provided with VS 17.4) and newer |
-| Clang | LLVM/Clang 17.0 and newer                            |
+| Clang | LLVM/Clang 16.0 and newer                            |
 | GCC | GCC 14 (after the 2023-09-20 daily bump) and newer   |
 
 About module support in CMake, see [here](https://gitlab.kitware.com/cmake/cmake/-/issues/18355).
