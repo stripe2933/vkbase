@@ -2,7 +2,6 @@
 
 ![Windows (Visual Studio 2022)](https://github.com/stripe2933/vkbase/actions/workflows/windows.yml/badge.svg)
 ![macOS (Clang 17)](https://github.com/stripe2933/vkbase/actions/workflows/macos.yml/badge.svg)
-![Linux (GCC 14)](https://github.com/stripe2933/vkbase/actions/workflows/linux.yml/badge.svg)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
