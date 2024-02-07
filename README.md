@@ -141,6 +141,7 @@ int main() {
         
     // Now you can use:
     // instance, physicalDevice, queueFamilyIndices, device, queues from App.
+    // appWithSwapchain.surface:                 vk::raii::SurfaceKHR
     // appWithSwapchain.presentQueueFamilyIndex: std::uint32_t
     // appWithSwapchain.presentQueue:            vk::Queue
     // appWithSwapchain.swapchain:               vk::raii::SwapchainKHR
