@@ -35,7 +35,7 @@ int main() {
     constexpr vk::ApplicationInfo appInfo {
         "vkbase Test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0),
+        vk::makeApiVersion(0, 1, 0, 0),
     };
 
     const vkbase::App app = vkbase::AppBuilder<TransferQueueFamilyIndex, TransferQueue>{

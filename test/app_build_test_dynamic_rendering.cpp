@@ -20,7 +20,7 @@ int main() {
     constexpr vk::ApplicationInfo appInfo {
         "vkbase test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0),
+        vk::makeApiVersion(0, 1, 0, 0),
     };
 
     const vkbase::AppWithSwapchain appWithSwapchain = vkbase::AppWithSwapchainBuilder{
