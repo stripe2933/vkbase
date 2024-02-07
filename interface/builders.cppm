@@ -12,6 +12,8 @@ module;
 #include <tuple>
 #include <vector>
 
+#include <vulkan/vulkan_hpp_macros.hpp>
+
 export module vkbase:builders;
 
 export import vulkan_hpp;
@@ -136,6 +138,10 @@ namespace vkbase {
         };
         vk::raii::Instance instance { context, instanceCreateInfo };
 
+#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
+        VULKAN_HPP_DEFAULT_DISPATCHER.init(*instance);
+#endif
+
         std::vector physicalDevices = instance.enumeratePhysicalDevices();
         if (physicalDevices.empty()) {
             throw std::runtime_error { "No physical device found." };
@@ -204,6 +210,10 @@ namespace vkbase {
             appBuilder.instanceExtensions,
         };
         vk::raii::Instance instance { context, instanceCreateInfo };
+
+#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
+        VULKAN_HPP_DEFAULT_DISPATCHER.init(*instance);
+#endif
 
         // Create surface;
         vk::raii::SurfaceKHR surface { instance, surfaceFunc(*instance) };
