@@ -16,7 +16,7 @@ int main() {
     constexpr vk::ApplicationInfo appInfo {
         "vkbase Test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0), // Use Vulkan 1.2.
+        vk::makeApiVersion(0, 1, 0, 0), // Use Vulkan 1.0.
     };
 
     // Create app with DefaultQueueFamilyIndices/DefaultQueues.
@@ -93,7 +93,7 @@ int main() {
     constexpr vk::ApplicationInfo appInfo {
         "vkbase Test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0),
+        vk::makeApiVersion(0, 1, 0, 0),
     };
 
     // You must initialize GLFW before querying required instance extensions and creating window.
@@ -173,7 +173,7 @@ int main() {
     constexpr vk::ApplicationInfo appInfo {
         "vkbase test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0),
+        vk::makeApiVersion(0, 1, 0, 0),
     };
 
     const vkbase::AppWithSwapchain appWithSwapchain = vkbase::AppWithSwapchainBuilder{
@@ -201,7 +201,7 @@ int main() {
                 "VK_KHR_dynamic_rendering",
             },
             .devicePNexts = std::tuple {
-                vk::PhysicalDeviceDynamicRenderingFeatures { vk::True },
+                vk::PhysicalDeviceDynamicRenderingFeaturesKHR { vk::True },
             },
         }
 #ifndef NDEBUG
@@ -302,7 +302,7 @@ int main() {
     constexpr vk::ApplicationInfo appInfo {
         "vkbase Test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0),
+        vk::makeApiVersion(0, 1, 0, 0),
     };
 
     const vkbase::App app = vkbase::AppBuilder<TransferQueueFamilyIndex, TransferQueue>{

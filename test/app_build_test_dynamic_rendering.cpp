@@ -4,13 +4,23 @@
 
 #include <tuple>
 
+#include <vulkan/vulkan_hpp_macros.hpp>
+
 import vkbase;
 
+#if VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1
+VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
+#endif
+
 int main() {
+#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
+    VULKAN_HPP_DEFAULT_DISPATCHER.init();
+#endif
+
     constexpr vk::ApplicationInfo appInfo {
         "vkbase test", 0,
         nullptr, 0,
-        vk::makeApiVersion(0, 1, 2, 0),
+        vk::makeApiVersion(0, 1, 0, 0),
     };
 
     const vkbase::AppWithSwapchain appWithSwapchain = vkbase::AppWithSwapchainBuilder{
@@ -38,7 +48,7 @@ int main() {
                 "VK_KHR_dynamic_rendering",
             },
             .devicePNexts = std::tuple {
-                vk::PhysicalDeviceDynamicRenderingFeatures { vk::True },
+                vk::PhysicalDeviceDynamicRenderingFeaturesKHR { vk::True },
             },
         }
         .enableValidationLayers()
