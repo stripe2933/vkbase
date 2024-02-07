@@ -201,7 +201,7 @@ int main() {
                 "VK_KHR_dynamic_rendering",
             },
             .devicePNexts = std::tuple {
-                vk::PhysicalDeviceDynamicRenderingFeatures { vk::True },
+                vk::PhysicalDeviceDynamicRenderingFeaturesKHR { vk::True },
             },
         }
 #ifndef NDEBUG
