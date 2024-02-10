@@ -87,6 +87,7 @@ namespace vkbase {
     template <typename QueueFamilyIndices, typename Queues>
     void AppWithSwapchain<QueueFamilyIndices, Queues>::recreateSwapchain(vk::Extent2D extent) {
         swapchainInfo.imageExtent = extent;
+        swapchainInfo.oldSwapchain = *swapchain;
         swapchain = { App<QueueFamilyIndices, Queues>::device, swapchainInfo };
         std::ranges::transform(swapchain.getImages(), swapchainImageAndViews.begin(), [this](vk::Image image) {
             return std::pair { image, vk::raii::ImageView { App<QueueFamilyIndices, Queues>::device, {
