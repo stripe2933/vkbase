@@ -298,18 +298,7 @@ namespace vkbase {
         };
         vk::raii::SwapchainKHR swapchain { device, createInfo };
 
-        std::vector<std::pair<vk::Image, vk::raii::ImageView>> swapchainImageAndViews;
-        swapchainImageAndViews.reserve(imageCount);
-        std::ranges::transform(swapchain.getImages(), std::back_inserter(swapchainImageAndViews), [this, &device](vk::Image image) {
-            return std::pair { image, vk::raii::ImageView { device, {
-                {},
-                image,
-                vk::ImageViewType::e2D,
-                swapchainFormat,
-                {},
-                { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
-            } } };
-        });
+        std::vector<vk::Image> swapchainImages = swapchain.getImages();
 
         return {
             {
@@ -325,7 +314,7 @@ namespace vkbase {
             presentQueue,
             std::move(swapchain),
             createInfo,
-            std::move(swapchainImageAndViews),
+            std::move(swapchainImages),
         };
     }
 }

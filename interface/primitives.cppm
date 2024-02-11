@@ -48,7 +48,7 @@ export namespace vkbase {
         vk::Queue presentQueue;
         vk::raii::SwapchainKHR swapchain;
         vk::SwapchainCreateInfoKHR swapchainInfo;
-        std::vector<std::pair<vk::Image, vk::raii::ImageView>> swapchainImageAndViews;
+        std::vector<vk::Image> swapchainImages;
 
         [[nodiscard]] auto acquireSwapchainImageIndex(vk::Semaphore imageAvailableSema) const -> std::optional<std::uint32_t>;
         [[nodiscard]] auto presentSwapchainImage(std::uint32_t imageIndex, std::span<const vk::Semaphore> waitSemas = {}) const -> bool;
@@ -89,15 +89,6 @@ namespace vkbase {
         swapchainInfo.imageExtent = extent;
         swapchainInfo.oldSwapchain = *swapchain;
         swapchain = { App<QueueFamilyIndices, Queues>::device, swapchainInfo };
-        std::ranges::transform(swapchain.getImages(), swapchainImageAndViews.begin(), [this](vk::Image image) {
-            return std::pair { image, vk::raii::ImageView { App<QueueFamilyIndices, Queues>::device, {
-                {},
-                image,
-                vk::ImageViewType::e2D,
-                swapchainInfo.imageFormat,
-                {},
-                { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 },
-            } } };
-        });
+        swapchainImages = swapchain.getImages();
     }
 }

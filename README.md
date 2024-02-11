@@ -146,7 +146,7 @@ int main() {
     // appWithSwapchain.presentQueue:            vk::Queue
     // appWithSwapchain.swapchain:               vk::raii::SwapchainKHR
     // appWithSwapchain.swapchainInfo:           vk::SwapchainCreateInfoKHR
-    // appWithSwapchain.swapchainImageAndViews:  std::vector<std::pair<vk::Image, vk::raii::ImageView>>
+    // appWithSwapchain.swapchainImages:         std::vector<vk::Image>
 
     glfwDestroyWindow(window);
     glfwTerminate();
