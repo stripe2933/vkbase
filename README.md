@@ -110,18 +110,12 @@ int main() {
                     const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
                     return std::vector(glfwExtensions, glfwExtensions + glfwExtensionCount);
                 }(),
-            }
-#if __APPLE__
-            .enablePotability()
-#endif
-#ifndef NDEBUG
-            .enableValidationLayers()
-#endif
-            ,
-            .swapchainFormat = vk::Format::eB8G8R8A8Srgb,               // Can omit this field (default: eR8G8B8A8Srgb).
-            .swapchainColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear,   // Can omit this field (default: eSrgbNonlinear).
-            .swapchainUsage = vk::ImageUsageFlagBits::eColorAttachment, // Can omit this field (default: eColorAttachment).
-            .swapchainPresentMode = vk::PresentModeKHR::eFifo,          // Can omit this field (default: eFifo).
+            },
+            // Below fields can be omitted by following default values.
+            // .swapchainFormat = vk::Format::eB8G8R8A8Srgb,
+            // .swapchainColorSpace = vk::ColorSpaceKHR::eSrgbNonlinear,
+            // .swapchainUsage = vk::ImageUsageFlagBits::eColorAttachment
+            // .swapchainPresentMode = vk::PresentModeKHR::eFifo,
         }
         .build(appInfo, [window](vk::Instance instance) {
             // The 2nd argument of AppWithSwapchainBuilder::build is a function to create surface.
@@ -204,12 +198,6 @@ int main() {
                 vk::PhysicalDeviceDynamicRenderingFeaturesKHR { vk::True },
             },
         }
-#ifndef NDEBUG
-        .enableValidationLayers()
-#endif
-#if __APPLE__
-        .enablePotability()
-#endif
     }
     .build(appInfo, [](vk::Instance instance) {
         constexpr vk::HeadlessSurfaceCreateInfoEXT createInfo{};
@@ -319,12 +307,6 @@ int main() {
             return TransferQueue { device.getQueue(indices.transfer, 0) };
         },
     }
-#if __APPLE__
-        .enablePotability()
-#endif
-#ifndef NDEBUG
-        .enableValidationLayers()
-#endif
-        .build(appInfo);
+    .build(appInfo);
 }
 ```
