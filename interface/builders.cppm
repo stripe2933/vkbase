@@ -268,6 +268,7 @@ namespace vkbase {
                 queueCreateInfos,
                 {},
                 appBuilder.deviceExtensions,
+                &appBuilder.physicalDeviceFeatures,
             },
             get<DevicePNexts>(appBuilder.devicePNexts)...
         };
